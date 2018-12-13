@@ -1,64 +1,129 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.UI;
 public class Boxes2 : MonoBehaviour {
 
 	float fall = 0;
 	public static int gridWeight = 10;
-	public static int gridHeight = 20;
+	public static int gridHeight = 40;
 	public static Transform[,] grid = new Transform[gridWeight, gridHeight];
-	
+
 
 	void Start () {
-		if (!isValidPosition()) {
+
+        if (!isValidPosition()) {
 			//Application.LoadLevel(0);
 			Destroy(gameObject);
 		}
 	}
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.gameObject.tag == "karakter")
-        {
-            if (Input.GetKey(KeyCode.D)) //ve karakter cismin sağında ise olayını ekle yoksa solunda iken de D ye basarsa cisim sağa sağa kayar.
-            {
-                Debug.Log("karaktercollision + D");
-                transform.position += new Vector3(1, 0, 0);
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if(collision.gameObject.tag == "karakter")
+    //    {
+    //        if (Input.GetKey(KeyCode.D)) //ve karakter cismin sağında ise olayını ekle yoksa solunda iken de D ye basarsa cisim sağa sağa kayar.
+    //        {
+    //            Debug.Log("karaktercollision + D");
+    //            transform.position += new Vector3(1, 0, 0);
 
-                if (isValidPosition())
-                {
-                    GridUpdate();
-                }
-                
-                else
-                    transform.position += new Vector3(-1, 0, 0);
-            }
+    //            if (isValidPosition())
+    //            {
+    //                GridUpdate();
+    //            }
 
-            if (Input.GetKey(KeyCode.A)) //ve karakter cismin solunda ise olayını ekle yoksa sağında iken de A ye basarsa cisim sağa sağa kayar.
-            {
-                Debug.Log("karaktercollision + A");
-                transform.position += new Vector3(-1, 0, 0);
-                if (isValidPosition())
-                    GridUpdate();
-                else
-                    transform.position += new Vector3(1, 0, 0);
-            }
-        }
-    }
+    //            else
+    //                transform.position += new Vector3(-1, 0, 0);
+    //        }
+
+    //        if (Input.GetKey(KeyCode.A)) //ve karakter cismin solunda ise olayını ekle yoksa sağında iken de A ye basarsa cisim sağa sağa kayar.
+    //        {
+    //            Debug.Log("karaktercollision + A");
+    //            transform.position += new Vector3(-1, 0, 0);
+    //            if (isValidPosition())
+    //                GridUpdate();
+    //            else
+    //                transform.position += new Vector3(1, 0, 0);
+    //        }
+    //    }
+    //}
+
+    //public void RightButton()
+    //{
+    //    transform.position += new Vector3(1, 0, 0);
+
+    //    if (isValidPosition())
+    //        GridUpdate();
+    //    else
+    //        transform.position += new Vector3(-1, 0, 0);
+    //}
+    //public void LeftButton()
+    //{
+    //    transform.position += new Vector3(-1, 0, 0);
+    //    if (isValidPosition())
+    //        GridUpdate();
+    //    else
+    //        transform.position += new Vector3(1, 0, 0);
+    //}
+    //public void DownButton()
+    //{
+    //    transform.position += new Vector3(0, -1, 0);
+    //    if (isValidPosition())
+    //    {
+    //        GridUpdate();
+    //    }
+    //    else
+    //    {
+    //        transform.position += new Vector3(0, 1, 0);
+    //        DeleteRow();
+    //        FindObjectOfType<SpawnBox2>().SpawnNewBox();
+    //        enabled = false;
+    //    }
+
+    //    fall = Time.time;
+    //}
+    //public void RotateButton()
+    //{
+    //    transform.Rotate(0, 0, -90); 
+    //    if (isValidPosition())
+    //        GridUpdate();
+    //    else
+    //        transform.Rotate(0, 0, 90);
+    //}
     void Update()
     {
-		if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Click.tempRight == 1)
         {
-            transform.Rotate(0, 0, 90);
+            transform.position += new Vector3(1, 0, 0);
+
             if (isValidPosition())
                 GridUpdate();
             else
-                transform.Rotate(0, 0, -90);
-
+                transform.position += new Vector3(-1, 0, 0);
+            Click.tempRight = 0;
         }
 
-        else if (Input.GetKeyDown(KeyCode.DownArrow) ||
-                 Time.time - fall >= 0.5)
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Click.tempLeft == 1)
+        {
+            transform.position += new Vector3(-1, 0, 0);
+            if (isValidPosition())
+                GridUpdate();
+            else
+                transform.position += new Vector3(1, 0, 0);
+            Click.tempLeft = 0;
+        }
+
+        else if (Input.GetKeyDown(KeyCode.UpArrow) || Click.tempRotate == 1)
+        {
+            transform.Rotate(0, 0, -90);
+            if (isValidPosition())
+                GridUpdate();
+            else
+                transform.Rotate(0, 0, 90);
+            Click.tempRotate = 0;
+        }
+
+        else if (Input.GetKeyDown(KeyCode.DownArrow) || Click.tempDown == 1 ||
+                 Time.time - fall >= 1 )
         {
             transform.position += new Vector3(0, -1, 0);
             if (isValidPosition())
@@ -74,11 +139,28 @@ public class Boxes2 : MonoBehaviour {
             }
 
             fall = Time.time;
+            Click.tempDown = 0;
         }
+        //if ( Time.time - fall >= 1)
+        //{
+        //    transform.position += new Vector3(0, -1, 0);
+        //    if (isValidPosition())
+        //    {
+        //        GridUpdate();
+        //    }
+        //    else
+        //    {
+        //        transform.position += new Vector3(0, 1, 0);
+        //        DeleteRow();
+        //        FindObjectOfType<SpawnBox2>().SpawnNewBox();
+        //        enabled = false;
+        //    }
 
+        //    fall = Time.time;
+        //}
     }
 
-	bool isValidPosition() {        
+    bool isValidPosition() {        
 		foreach (Transform child in transform) {
 			Vector2 v = round(child.position);
 			if (!isInsideGrid(v))
