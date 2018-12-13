@@ -8,6 +8,7 @@ public class Click : MonoBehaviour {
     public static int tempLeft;
     public static int tempDown;
     public static int tempRotate;
+    public static double hiz;
     // Use this for initialization
     void Start () {
         tempRight = 0;
@@ -34,6 +35,6 @@ public class Click : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-		
-	}
+        hiz = Boxes2.hiz;
+    }
 }
