@@ -18,7 +18,6 @@ public class Boxes2 : MonoBehaviour {
     {
         if(hiz < 0.7)
         {
-            Debug.Log(hiz);
             hiz = hiz + 0.0001;
         }
     }
@@ -113,6 +112,7 @@ public class Boxes2 : MonoBehaviour {
 			Destroy(grid[x, y].gameObject);
 			grid[x, y] = null;
 		}
+        Score.score += 1;
 	}
 
 	public static bool isFull(int y) {
