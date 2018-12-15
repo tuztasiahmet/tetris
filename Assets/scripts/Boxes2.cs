@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 public class Boxes2 : MonoBehaviour {
 
 	float fall = 0;
@@ -14,13 +15,204 @@ public class Boxes2 : MonoBehaviour {
 			Destroy(gameObject);
 		}
 	}
+    
+    bool boolTimer = true;
+    bool boolTimerY = true;
+    bool boolTimerZ = true;
+    void TouchScreenMovement()
+    {
+        if (Input.touchCount == 1)
+        {
+            //if (boolTimer == true)
+            //{
+            //    if (Mathf.FloorToInt(Input.touches[0].deltaPosition.x) > 50 || Mathf.FloorToInt(Input.touches[0].deltaPosition.x) < -50)
+            //        transform.position += new Vector3(Input.touches[0].deltaPosition.x / Mathf.Abs(Input.touches[0].deltaPosition.x), 0, 0);
+
+            //    if (isValidPosition())
+            //        GridUpdate();
+            //    else
+            //    {
+            //        if ((Mathf.FloorToInt(Input.touches[0].deltaPosition.x) > 0)) transform.position += new Vector3(-1, 0, 0);
+            //        if ((Mathf.FloorToInt(Input.touches[0].deltaPosition.x) < 0)) transform.position += new Vector3(1, 0, 0);
+            //    }
+            //    boolTimer = false;
+            //}
+
+            Touch touch = Input.GetTouch(0);
+            switch (touch.phase)
+            {
+                // Record initial touch position.
+                case TouchPhase.Began:
+                    boolTimerY = true;
+                    break;
+
+                // Determine direction by comparing the current touch position with the initial one.
+                case TouchPhase.Moved:
+                    if (boolTimerY == true)
+                    {
+                        if (Mathf.FloorToInt(touch.deltaPosition.y) > 60)
+                        {
+                            transform.Rotate(0, 0, -90);
+                            if (isValidPosition())
+                                GridUpdate();
+                            else
+                                transform.Rotate(0, 0, 90);
+
+                            boolTimerY = false;
+                        }
+                    }
+                    break;
+                // Report that a direction has been chosen when the finger is lifted.
+                case TouchPhase.Ended:
+                    break;
+            } //rotate (yukarı kaydırma) dokunmatik hareket
+
+            switch (touch.phase)
+            {
+                // Record initial touch position.
+                case TouchPhase.Began:
+                    boolTimerZ = true;
+                    break;
+
+                // Determine direction by comparing the current touch position with the initial one.
+                case TouchPhase.Moved:
+                    if (boolTimerZ == true)
+                    {
+                        if (Mathf.FloorToInt(touch.deltaPosition.y) < -45)
+                        {
+                            transform.position += new Vector3(0, Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y ), 0);
+                            boolTimerZ = false;
+                            if (isValidPosition())
+                            {
+                                GridUpdate();
+                            }
+                            else
+                            {
+                                transform.position += new Vector3(0, 1, 0);
+                                DeleteRow();
+                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
+                                enabled = false;
+                            }
+                            transform.position += new Vector3(0, Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y), 0);
+
+                            if (isValidPosition())
+                            {
+                                GridUpdate();
+                            }
+                            else
+                            {
+                                transform.position += new Vector3(0, 1, 0);
+                                DeleteRow();
+                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
+                                enabled = false;
+                            }
+                            transform.position += new Vector3(0, Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y), 0);
+
+                            if (isValidPosition())
+                            {
+                                GridUpdate();
+                            }
+                            else
+                            {
+                                transform.position += new Vector3(0, 1, 0);
+                                DeleteRow();
+                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
+                                enabled = false;
+                            }
+
+                        }
+                        else if (Mathf.FloorToInt(touch.deltaPosition.y) < -30)
+                        {
+                            transform.position += new Vector3(0, (Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y) ), 0);
+                            boolTimerZ = false;
+                            if (isValidPosition())
+                            {
+                                GridUpdate();
+                            }
+                            else
+                            {
+                                transform.position += new Vector3(0, 1, 0);
+                                DeleteRow();
+                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
+                                enabled = false;
+                            }
+                            transform.position += new Vector3(0, (Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y) ), 0);
+                            if (isValidPosition())
+                            {
+                                GridUpdate();
+                            }
+                            else
+                            {
+                                transform.position += new Vector3(0, 1, 0);
+                                DeleteRow();
+                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
+                                enabled = false;
+                            }
+                        }
+                        else if (Mathf.FloorToInt(touch.deltaPosition.y) < -15)
+                        {
+                            transform.position += new Vector3(0, Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y ), 0);
+                            boolTimerZ = false;
+                            if (isValidPosition())
+                            {
+                                GridUpdate();
+                            }
+                            else
+                            {
+                                transform.position += new Vector3(0, 1, 0);
+                                DeleteRow();
+                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
+                                enabled = false;
+                            }
+                        }
+                    }
+                    break;
+                case TouchPhase.Ended:
+                    break;
+            } //aşşağı dokunmatik hareket
+            switch (touch.phase)
+            {
+                // Record initial touch position.
+                case TouchPhase.Began:
+                    boolTimer = true;
+                    break;
+
+                // Determine direction by comparing the current touch position with the initial one.
+                case TouchPhase.Moved:
+                    if(boolTimer == true)
+                    {
+                        if (Mathf.FloorToInt(Input.touches[0].deltaPosition.x) > 20 || Mathf.FloorToInt(Input.touches[0].deltaPosition.x) < -20)
+                        transform.position += new Vector3(Input.touches[0].deltaPosition.x / Mathf.Abs(Input.touches[0].deltaPosition.x), 0, 0);
+                        boolTimer = false;
+                        if (isValidPosition())
+                            GridUpdate();
+                        else
+                        {
+                            if ((Mathf.FloorToInt(Input.touches[0].deltaPosition.x) > 0)) transform.position += new Vector3(-1, 0, 0);
+                            if ((Mathf.FloorToInt(Input.touches[0].deltaPosition.x) < 0)) transform.position += new Vector3(1, 0, 0);
+                        }
+                    }
+                    break;
+                // Report that a direction has been chosen when the finger is lifted.
+                case TouchPhase.Ended:
+                    break;
+            } // sağ sol dokunmatik hareket
+            
+        }
+
+    }
     private void FixedUpdate()
     {
         if(hiz < 0.7)
         {
             hiz = hiz + 0.0001;
         }
+
+        TouchScreenMovement();
     }
+    //string tempString;
+    //int tempInt = 0;
+    
     void Update()
     {
 
