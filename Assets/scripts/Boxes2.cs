@@ -7,8 +7,10 @@ public class Boxes2 : MonoBehaviour {
 	public static int gridHeight = 40;
 	public static Transform[,] grid = new Transform[gridWeight, gridHeight];
     public static double hiz ;
+    public double hizz;
+    
 
-	void Start () {
+    void Start () {
         hiz = Click.hiz;
         if (!isValidPosition()) {
 			//Application.LoadLevel(0);
@@ -19,6 +21,15 @@ public class Boxes2 : MonoBehaviour {
     bool boolTimer = true;
     bool boolTimerY = true;
     bool boolTimerZ = true;
+    bool hizliDusme =false;
+    bool kontrol = true;
+
+    public static bool sagaSolaHareket = false;
+    public static bool asagiIndirme = false;
+    public static bool dondurme = false;
+    public static bool highScore = false;
+    public static bool gameOver = false;
+
     void TouchScreenMovement()
     {
         if (Input.touchCount == 1)
@@ -52,6 +63,7 @@ public class Boxes2 : MonoBehaviour {
                     {
                         if (Mathf.FloorToInt(touch.deltaPosition.y) > 60)
                         {
+                            dondurme = true;
                             transform.Rotate(0, 0, -90);
                             if (isValidPosition())
                                 GridUpdate();
@@ -78,96 +90,30 @@ public class Boxes2 : MonoBehaviour {
                 case TouchPhase.Moved:
                     if (boolTimerZ == true)
                     {
-                        if (Mathf.FloorToInt(touch.deltaPosition.y) < -45)
+                        if (Mathf.FloorToInt(touch.deltaPosition.y) < -60)
                         {
-                            transform.position += new Vector3(0, Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y ), 0);
-                            boolTimerZ = false;
-                            if (isValidPosition())
-                            {
-                                GridUpdate();
-                            }
-                            else
-                            {
-                                transform.position += new Vector3(0, 1, 0);
-                                DeleteRow();
-                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
-                                enabled = false;
-                            }
-                            transform.position += new Vector3(0, Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y), 0);
 
-                            if (isValidPosition())
-                            {
-                                GridUpdate();
-                            }
-                            else
-                            {
-                                transform.position += new Vector3(0, 1, 0);
-                                DeleteRow();
-                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
-                                enabled = false;
-                            }
-                            transform.position += new Vector3(0, Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y), 0);
-
-                            if (isValidPosition())
-                            {
-                                GridUpdate();
-                            }
-                            else
-                            {
-                                transform.position += new Vector3(0, 1, 0);
-                                DeleteRow();
-                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
-                                enabled = false;
-                            }
-
-                        }
-                        else if (Mathf.FloorToInt(touch.deltaPosition.y) < -30)
-                        {
-                            transform.position += new Vector3(0, (Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y) ), 0);
-                            boolTimerZ = false;
-                            if (isValidPosition())
-                            {
-                                GridUpdate();
-                            }
-                            else
-                            {
-                                transform.position += new Vector3(0, 1, 0);
-                                DeleteRow();
-                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
-                                enabled = false;
-                            }
-                            transform.position += new Vector3(0, (Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y) ), 0);
-                            if (isValidPosition())
-                            {
-                                GridUpdate();
-                            }
-                            else
-                            {
-                                transform.position += new Vector3(0, 1, 0);
-                                DeleteRow();
-                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
-                                enabled = false;
-                            }
-                        }
-                        else if (Mathf.FloorToInt(touch.deltaPosition.y) < -15)
-                        {
-                            transform.position += new Vector3(0, Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y ), 0);
-                            boolTimerZ = false;
-                            if (isValidPosition())
-                            {
-                                GridUpdate();
-                            }
-                            else
-                            {
-                                transform.position += new Vector3(0, 1, 0);
-                                DeleteRow();
-                                FindObjectOfType<SpawnBox2>().SpawnNewBox();
-                                enabled = false;
-                            }
+                            kontrol = false;
+                            hizliDusme = true;
+                            //    transform.position += new Vector3(0, Input.touches[0].deltaPosition.y / Mathf.Abs(Input.touches[0].deltaPosition.y ), 0);
+                            //    boolTimerZ = false;
+                            //    if (isValidPosition())
+                            //    {
+                            //        GridUpdate();
+                            //    }
+                            //    else
+                            //    {
+                            //        transform.position += new Vector3(0, 1, 0);
+                            //        DeleteRow();
+                            //        FindObjectOfType<SpawnBox2>().SpawnNewBox();
+                            //        enabled = false;
+                            //    }
                         }
                     }
                     break;
                 case TouchPhase.Ended:
+                    kontrol = true;
+                    hizliDusme = false;
                     break;
             } //aşşağı dokunmatik hareket
             switch (touch.phase)
@@ -179,17 +125,23 @@ public class Boxes2 : MonoBehaviour {
 
                 // Determine direction by comparing the current touch position with the initial one.
                 case TouchPhase.Moved:
-                    if(boolTimer == true)
+                    if(boolTimer == true && kontrol ==true)
                     {
-                        if (Mathf.FloorToInt(Input.touches[0].deltaPosition.x) > 20 || Mathf.FloorToInt(Input.touches[0].deltaPosition.x) < -20)
-                        transform.position += new Vector3(Input.touches[0].deltaPosition.x / Mathf.Abs(Input.touches[0].deltaPosition.x), 0, 0);
-                        boolTimer = false;
-                        if (isValidPosition())
-                            GridUpdate();
-                        else
+                        if(Mathf.Abs(Input.touches[0].deltaPosition.x) > Mathf.Abs(Input.touches[0].deltaPosition.y))
                         {
-                            if ((Mathf.FloorToInt(Input.touches[0].deltaPosition.x) > 0)) transform.position += new Vector3(-1, 0, 0);
-                            if ((Mathf.FloorToInt(Input.touches[0].deltaPosition.x) < 0)) transform.position += new Vector3(1, 0, 0);
+
+                            if (Mathf.FloorToInt(Input.touches[0].deltaPosition.x) > 15 || Mathf.FloorToInt(Input.touches[0].deltaPosition.x) < 15)
+                                dondurme = true;
+                            transform.position += new Vector3(Input.touches[0].deltaPosition.x / Mathf.Abs(Input.touches[0].deltaPosition.x), 0, 0);
+                            boolTimer = false;
+                            if (isValidPosition())
+                                GridUpdate();
+                            else
+                            {
+                                if ((Mathf.FloorToInt(Input.touches[0].deltaPosition.x) > 0)) transform.position += new Vector3(-1, 0, 0);
+                                if ((Mathf.FloorToInt(Input.touches[0].deltaPosition.x) < 0)) transform.position += new Vector3(1, 0, 0);
+                            }
+                            
                         }
                     }
                     break;
@@ -203,9 +155,9 @@ public class Boxes2 : MonoBehaviour {
     }
     private void FixedUpdate()
     {
-        if(hiz < 0.7)
+        if(hizz < 0.7)
         {
-            hiz = hiz + 0.0001;
+            hizz = hizz + 0.0001;
         }
 
         TouchScreenMovement();
@@ -215,9 +167,10 @@ public class Boxes2 : MonoBehaviour {
     
     void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.RightArrow) || Click.tempRight == 1)
         {
+            dondurme = true;
+
             transform.position += new Vector3(1, 0, 0);
 
             if (isValidPosition())
@@ -229,6 +182,7 @@ public class Boxes2 : MonoBehaviour {
 
         else if (Input.GetKeyDown(KeyCode.LeftArrow) || Click.tempLeft == 1)
         {
+            dondurme = true;
             transform.position += new Vector3(-1, 0, 0);
             if (isValidPosition())
                 GridUpdate();
@@ -239,6 +193,8 @@ public class Boxes2 : MonoBehaviour {
 
         else if (Input.GetKeyDown(KeyCode.UpArrow) || Click.tempRotate == 1)
         {
+            dondurme = true;
+
             transform.Rotate(0, 0, -90);
             if (isValidPosition())
                 GridUpdate();
@@ -248,7 +204,7 @@ public class Boxes2 : MonoBehaviour {
         }
 
         else if (Input.GetKeyDown(KeyCode.DownArrow) || Click.tempDown == 1 ||
-                 Time.time - fall >= 1 - hiz )
+                 Time.time - fall >= 1 - hizz || hizliDusme )
         {
             transform.position += new Vector3(0, -1, 0);
             if (isValidPosition())
@@ -308,8 +264,8 @@ public class Boxes2 : MonoBehaviour {
 	}
 
 	public static bool isFull(int y) {
-		for (int x = 0; x < gridWeight; ++x)
-			if (grid[x, y] == null)
+        for (int x = 0; x < gridWeight; ++x)
+            if (grid[x, y] == null)
 				return false;
 		return true;
 	}
